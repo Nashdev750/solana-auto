@@ -1,0 +1,25 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wallets Manager</title>
+</head>
+<body>
+    <h1>Wallets Manager</h1>
+    <form action="/add" method="post">
+        <input type="text" name="name" placeholder="Item name" required>
+        <button type="submit">Add Wallets to Track</button>
+    </form>
+    <ul>
+        <% items.forEach(item => { %>
+            <li>
+                <%= item.name %>
+                <form action="/delete" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="<%= item._id %>">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        <% }) %>
+    </ul>
+</body>
+</html>
