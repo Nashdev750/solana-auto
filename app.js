@@ -58,7 +58,8 @@ app.post('/webhook', async (req, res)=>{
         Date: new Date(),
         open: true
     })
-    const message = `Wallet ${data.description},
+    const message = `${buy ? "Buy Signal! 🐳" : "Sell Signal!"}
+Wallet ${data.description},
 Token Details: https://birdeye.so/token/${transfers[buy?1:0].mint}?chain=solana,
 Tracked wallet: ${transfers[1].toUserAccount}
 
