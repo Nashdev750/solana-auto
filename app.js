@@ -32,7 +32,7 @@ const Transaction = mongoose.model('Transaction', transactionSchema);
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(express.json())
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 
@@ -46,7 +46,7 @@ app.post('/webhook', async (req, res)=>{
     if(!req.body[0].description.toLowerCase().includes("swapped")) return
     const data = req.body[0]
     const transfers = data.tokenTransfers
-    const buy = true
+    let buy = true
     if(transfers.length != 2) return
     if(transfers[0].mint != sol) buy = false 
 
@@ -58,9 +58,11 @@ app.post('/webhook', async (req, res)=>{
         Date: new Date(),
         open: true
     })
-    const message = `${data.description},
-    token: https://birdeye.so/token/${transfers[buy?1:0].mint}?chain=solana,
-    wallet: ${transfers[1].toUserAccount}
+    const message = `Wallet ${data.description},
+Token Details: https://birdeye.so/token/${transfers[buy?1:0].mint}?chain=solana,
+Traked wallet: ${transfers[1].toUserAccount}
+
+
     `
     try {
         const url = `https://api.telegram.org/bot${process.env.TOKEN}/sendMessage`;
