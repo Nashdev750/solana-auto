@@ -20,6 +20,9 @@ mongoose.connect(process.env.CONNECTIONSTRING).then(()=>{
 const itemSchema = new mongoose.Schema({
     name: String
 });
+const transObjSchema = new mongoose.Schema({
+    obj: Object
+});
 const transactionSchema = new mongoose.Schema({
     type: Boolean,
     type2: String,
@@ -32,6 +35,7 @@ const transactionSchema = new mongoose.Schema({
 
 const Item = mongoose.model('Item', itemSchema);
 const Transaction = mongoose.model('Transaction', transactionSchema);
+const transObj = mongoose.model('transObj', transObjSchema);
 
 
 
@@ -48,7 +52,7 @@ app.get('/', async (req, res) => {
 
 app.post('/webhook', async (req, res)=>{
     const data = req.body[0]
-
+    await transObj.create({obj:data})
     // if(!actions.includes(data.type)) return
     const transfers = data.tokenTransfers
     let buy = true
