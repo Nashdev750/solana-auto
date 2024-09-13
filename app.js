@@ -22,6 +22,7 @@ const itemSchema = new mongoose.Schema({
 });
 const transactionSchema = new mongoose.Schema({
     type: Boolean,
+    type2: String,
     from: String,
     to:String,
     description: String,
@@ -47,26 +48,31 @@ app.get('/', async (req, res) => {
 
 app.post('/webhook', async (req, res)=>{
     const data = req.body[0]
-    if(!actions.includes(data.type)) return
+
+    // if(!actions.includes(data.type)) return
     const transfers = data.tokenTransfers
     let buy = true
-    if(transfers.length != 2) return
+    // if(transfers.length != 2) return
 
     if(transfers[0].mint != sol) buy = false 
-    if(buy && transfers[1].toUserAccount != mainwallet) return
-    
-    if(!buy && transfers[1].toUserAccount != mainwallet){
-        if(transfers[1].tokenAmount < 10) return
-    }
 
     await Transaction.create({
         type: buy,
+        type2: data.type,
         from: transfers[0].mint,
         to:transfers[1].mint,
         description: data.description,
         Date: new Date(),
         open: true
     })
+
+    // if(buy && transfers[1].toUserAccount != mainwallet) return
+    
+    // if(!buy && transfers[1].toUserAccount != mainwallet){
+    //     if(transfers[1].tokenAmount < 10) return
+    // }
+
+    
 
     const message = `${buy ? "Buy Signal! 🐳" : "Sell Signal!"}
 Transaction Type: ${data.type}
